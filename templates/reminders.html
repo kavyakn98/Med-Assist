@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reminders | MedAssist</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">✚</div>
+            <div>
+                <h2>MedAssist</h2>
+                <span>SMART HEALTHCARE</span>
+            </div>
+        </div>
+
+        <p class="menu-heading">MENU</p>
+
+        <nav class="sidebar-nav">
+
+            <a href="/" class="nav-link">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="/medicines" class="nav-link">
+                <span>💊</span> My Medicines
+            </a>
+
+            <a href="/reminders" class="nav-link active">
+                <span>◷</span> Reminders
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="help-card">
+                <div class="help-icon">♥</div>
+                <h3>Stay Healthy!</h3>
+                <p>Small steps every day make a healthier life.</p>
+            </div>
+
+            <p class="sidebar-footer">MedAssist © 2026</p>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <p class="breadcrumb">Pages / Reminders</p>
+                <h2>Medicine Reminders</h2>
+            </div>
+
+            <div class="profile">
+                <div class="profile-icon">👤</div>
+                <div>
+                    <h4>Welcome!</h4>
+                    <span>Stay on schedule</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- PAGE INTRODUCTION -->
+        <section class="page-intro">
+
+            <div>
+                <span class="welcome-tag">NEVER MISS A DOSE</span>
+
+                <h1>Your Reminders</h1>
+
+                <p>
+                    Keep track of your medicine timings
+                    and stay consistent with your routine.
+                </p>
+            </div>
+
+            <div class="intro-icon">🔔</div>
+
+        </section>
+
+
+        <!-- REMINDER SUMMARY -->
+        <section class="stats-grid reminder-stats">
+
+            <div class="stat-card">
+                <div class="stat-icon purple">💊</div>
+                <p>Total Reminders</p>
+                <h2 id="reminderTotal">0</h2>
+                <span>Saved schedules</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">◷</div>
+                <p>Upcoming</p>
+                <h2 id="reminderUpcoming">0</h2>
+                <span>Pending reminders</span>
+            </div>
+
+        </section>
+
+
+        <!-- REMINDER LIST -->
+        <section class="dashboard-panel">
+
+            <div class="panel-heading">
+
+                <div>
+                    <h2>Scheduled Medicines</h2>
+                    <p>Your saved medicine reminder timings.</p>
+                </div>
+
+                <span class="reminder-icon">⏰</span>
+
+            </div>
+
+            <div id="reminderList">
+
+                <div class="schedule-placeholder">
+                    <div class="placeholder-icon">🔔</div>
+
+                    <h3>No reminders available</h3>
+
+                    <p>
+                        Add medicines and their reminder times
+                        to see your schedule here.
+                    </p>
+
+                    <a href="/medicines" class="secondary-link">
+                        + Add Medicine
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ALARM AREA -->
+        <section class="dashboard-panel alarm-panel" id="alarmBox"
+                 style="display: none;">
+
+            <div class="alarm-heading">
+                <div class="alarm-large-icon">🔔</div>
+
+                <div>
+                    <span class="welcome-tag">MEDICINE ALERT</span>
+                    <h2>Time to Take Your Medicine!</h2>
+                    <p>Please respond to this reminder.</p>
+                </div>
+            </div>
+
+            <div class="alarm-details">
+                <h3 id="alarmMedicineName">Medicine Name</h3>
+                <p id="alarmDosage">Dosage</p>
+            </div>
+
+            <div class="alarm-actions">
+
+                <button type="button" id="takenButton"
+                        class="taken-button">
+                    ✓ Taken
+                </button>
+
+                <button type="button" id="snoozeButton"
+                        class="snooze-button">
+                    ◷ Snooze 10 min
+                </button>
+
+                <button type="button" id="missedButton"
+                        class="missed-button">
+                    ✕ Not Available
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- REMINDER INFORMATION -->
+        <section class="ai-banner">
+
+            <div class="ai-icon">♥</div>
+
+            <div>
+                <span>SMART REMINDER SYSTEM</span>
+
+                <h2>We're here to remind you.</h2>
+
+                <p>
+                    If a reminder goes unanswered, MedAssist
+                    will make three reminder attempts before
+                    triggering the caregiver alert feature.
+                </p>
+            </div>
+
+        </section>
+
+
+        <footer class="page-footer">
+            Made with care ♥ | MedAssist Medicine Reminder System
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
