@@ -393,3 +393,174 @@ const missedButton = document.getElementById("missedButton");
 // ==========================================
 
 loadMedicines();
+// ==========================================
+// 11. BROWSER NOTIFICATION PERMISSION
+// ==========================================
+
+async function requestNotificationPermission() {
+
+    if (!("Notification" in window)) {
+        alert("Your browser does not support notifications.");
+        return;
+    }
+
+    if (Notification.permission === "default") {
+
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+            alert("Notifications enabled successfully!");
+        }
+
+    } else if (Notification.permission === "granted") {
+
+        console.log("Notifications are already enabled.");
+
+    } else {
+
+        alert("Please enable notifications in your browser settings.");
+
+    }
+}
+
+requestNotificationPermission();
+// ==========================================
+// 11. BROWSER NOTIFICATION PERMISSION
+// ==========================================
+
+async function requestNotificationPermission() {
+
+    if (!("Notification" in window)) {
+        alert("Your browser does not support notifications.");
+        return;
+    }
+
+    if (Notification.permission === "default") {
+
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+            alert("Notifications enabled successfully!");
+        }
+
+    } else if (Notification.permission === "granted") {
+
+        console.log("Notifications are already enabled.");
+
+    } else {
+
+        alert("Please enable notifications in your browser settings.");
+
+    }
+}
+
+requestNotificationPermission();
+
+let activeAlarmMedicine = null;
+
+async function checkDailyReminders() {
+    try {
+        const response = await fetch("/get_medicines");
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch medicines");
+        }
+
+        const medicines = await response.json();
+        const now = new Date();
+
+        const currentTime =
+            String(now.getHours()).padStart(2, "0") + ":" +
+            String(now.getMinutes()).padStart(2, "0");
+
+        for (const medicine of medicines) {
+
+            if (
+                medicine.status === "Taken" ||
+                medicine.status === "Missed"
+            ) {
+                continue;
+            }
+
+            if (medicine.status === "Snoozed") {
+                if (
+                    !medicine.snoozed_until ||
+                    new Date(medicine.snoozed_until) > now
+                ) {
+                    continue;
+                }
+            } else if (medicine.time > currentTime) {
+                continue;
+            }
+
+            if (medicine.last_reminded) {
+                const lastTime = new Date(medicine.last_reminded);
+                const difference = (now - lastTime) / 60000;
+
+                if (difference < 5) {
+                    continue;
+                }
+            }
+
+            if (medicine.attempts >= 3) {
+                continue;
+            }
+
+            await triggerMedicineAlarm(medicine);
+            break;
+        }
+
+    } catch (error) {
+        console.error("Reminder checking error:", error);
+    }
+}
+
+async function triggerMedicineAlarm(medicine) {
+
+    const response = await fetch(
+        "/record_attempt/" + medicine.id,
+        { method: "POST" }
+    );
+
+    if (!response.ok) {
+        console.error("Failed to record reminder attempt");
+        return;
+    }
+
+    const result = await response.json();
+
+    activeAlarmMedicine = medicine;
+
+    const alarmBox = document.getElementById("alarmBox");
+
+    if (alarmBox) {
+        document.getElementById("alarmMedicineName").textContent =
+            medicine.name;
+
+        document.getElementById("alarmDosage").textContent =
+            medicine.dosage;
+
+        alarmBox.style.display = "block";
+
+        alarmBox.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+    if (Notification.permission === "granted") {
+        new Notification("MedAssist - Medicine Reminder", {
+            body: "Time to take " + medicine.name +
+                  " (" + medicine.dosage + ")",
+            tag: "medicine-" + medicine.id
+        });
+    }
+
+    if (result.caregiver_alert_due) {
+        console.log("Caregiver alert is due for:", medicine.name);
+    }
+}
+
+checkDailyReminders();
+
+setInterval(checkDailyReminders, 15000);
